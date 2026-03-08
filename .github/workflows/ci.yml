@@ -25,11 +25,9 @@ jobs:
 
       - name: Restore dependencies
         run: dotnet restore CinemaSessionManager.ConsoleApp/CinemaSessionManager.ConsoleApp.csproj
-        working-directory: CinemaSessionManager
 
       - name: Build (Release)
         run: dotnet build CinemaSessionManager.ConsoleApp/CinemaSessionManager.ConsoleApp.csproj -c Release --no-restore
-        working-directory: CinemaSessionManager
 
   docker:
     name: Build & Push Docker Image
@@ -67,8 +65,8 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
-          context: ./CinemaSessionManager
-          file: ./CinemaSessionManager/Dockerfile
+          context: .
+          file: ./Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
