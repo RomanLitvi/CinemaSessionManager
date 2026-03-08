@@ -1,30 +1,30 @@
 using CinemaSessionManager.Models.Entities;
 using CinemaSessionManager.Models.Enums;
+using CinemaSessionManager.Services.Interfaces;
 
 namespace CinemaSessionManager.Services
 {
     /// <summary>
     /// Штучне сховище даних з реалістичними початковими значеннями.
-    /// Доступ до цього класу має лише CinemaService (internal).
     /// Містить 3 кінозали і 14 кіносеансів.
     /// </summary>
-    internal static class FakeDataStore
+    internal class FakeDataStore : IDataStore
     {
-        private static readonly List<CinemaHallEntity> _cinemaHalls;
-        private static readonly List<SessionEntity> _sessions;
+        private readonly List<CinemaHallEntity> _cinemaHalls;
+        private readonly List<SessionEntity> _sessions;
 
-        static FakeDataStore()
+        public FakeDataStore()
         {
             _cinemaHalls = InitializeCinemaHalls();
             _sessions = InitializeSessions();
         }
 
-        internal static List<CinemaHallEntity> GetCinemaHalls()
+        public List<CinemaHallEntity> GetCinemaHalls()
         {
             return new List<CinemaHallEntity>(_cinemaHalls);
         }
 
-        internal static List<SessionEntity> GetSessionsByHallId(int hallId)
+        public List<SessionEntity> GetSessionsByHallId(int hallId)
         {
             var result = new List<SessionEntity>();
             foreach (var session in _sessions)
@@ -37,7 +37,7 @@ namespace CinemaSessionManager.Services
             return result;
         }
 
-        internal static List<SessionEntity> GetAllSessions()
+        public List<SessionEntity> GetAllSessions()
         {
             return new List<SessionEntity>(_sessions);
         }

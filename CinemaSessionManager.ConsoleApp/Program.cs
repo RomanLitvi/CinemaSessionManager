@@ -1,5 +1,7 @@
 using CinemaSessionManager.Services;
+using CinemaSessionManager.Services.Interfaces;
 using CinemaSessionManager.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CinemaSessionManager.ConsoleApp
 {
@@ -10,10 +12,16 @@ namespace CinemaSessionManager.ConsoleApp
     /// </summary>
     internal class Program
     {
-        private static readonly CinemaService _cinemaService = new CinemaService();
+        private static ICinemaService _cinemaService = null!;
 
         static void Main(string[] args)
         {
+            var serviceProvider = new ServiceCollection()
+                .AddCinemaServices()
+                .BuildServiceProvider();
+
+            _cinemaService = serviceProvider.GetRequiredService<ICinemaService>();
+
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             Console.WriteLine("=== Менеджер кіносеансів ===\n");
 
@@ -21,10 +29,8 @@ namespace CinemaSessionManager.ConsoleApp
 
             while (running)
             {
-                // Отримуємо список кінозалів через сервіс
                 List<CinemaHallViewModel> halls = _cinemaService.GetAllCinemaHalls();
 
-                // Завантажуємо сеанси для кожного залу (щоб показати кількість)
                 foreach (var hall in halls)
                 {
                     _cinemaService.LoadSessions(hall);
@@ -52,7 +58,6 @@ namespace CinemaSessionManager.ConsoleApp
                     continue;
                 }
 
-                // Отримуємо кінозал з сеансами
                 CinemaHallViewModel? selectedHall = _cinemaService.GetCinemaHallWithSessions(selectedId);
 
                 if (selectedHall == null)
@@ -113,7 +118,6 @@ namespace CinemaSessionManager.ConsoleApp
                     continue;
                 }
 
-                // Шукаємо сеанс серед сеансів обраного залу
                 SessionViewModel? selectedSession = null;
                 foreach (var session in hall.Sessions)
                 {
