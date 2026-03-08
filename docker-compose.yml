@@ -1,0 +1,21 @@
+services:
+  cinema-console-app:
+    image: litvinchukroman/cinema-manager:latest
+    container_name: cinema-session-manager
+    stdin_open: true
+    tty: true
+    restart: "no"
+    networks:
+      - cinema-network
+    environment:
+      - DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: "0.5"
+
+networks:
+  cinema-network:
+    driver: bridge
+    name: cinema-network
