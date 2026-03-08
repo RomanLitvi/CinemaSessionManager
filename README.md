@@ -101,9 +101,3 @@ docker compose run cinema-console-app
 1. **Build** — відновлення залежностей та збірка .NET проєкту
 2. **Docker** — збірка Docker-образу та push в Docker Hub
 
-### Необхідні GitHub Secrets
-
-| Secret | Опис | Приклад |
-|--------|------|---------|
-| `DOCKERHUB_USERNAME` | Логін Docker Hub | `litvinchukroman` |
-| `DOCKERHUB_TOKEN` | Access Token Docker Hub | Створити на hub.docker.com → Settings → Security |
