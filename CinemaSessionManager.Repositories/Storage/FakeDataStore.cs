@@ -1,8 +1,7 @@
 using CinemaSessionManager.Models.Entities;
 using CinemaSessionManager.Models.Enums;
-using CinemaSessionManager.Services.Interfaces;
 
-namespace CinemaSessionManager.Services
+namespace CinemaSessionManager.Repositories.Storage
 {
     /// <summary>
     /// Штучне сховище даних з реалістичними початковими значеннями.
@@ -30,16 +29,19 @@ namespace CinemaSessionManager.Services
             foreach (var session in _sessions)
             {
                 if (session.CinemaHallId == hallId)
-                {
                     result.Add(session);
-                }
             }
             return result;
         }
 
-        public List<SessionEntity> GetAllSessions()
+        public SessionEntity? GetSessionById(int sessionId)
         {
-            return new List<SessionEntity>(_sessions);
+            foreach (var session in _sessions)
+            {
+                if (session.Id == sessionId)
+                    return session;
+            }
+            return null;
         }
 
         private static List<CinemaHallEntity> InitializeCinemaHalls()

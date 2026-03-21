@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Менеджер кіносеансів — UI Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#f0f0f5;min-height:100vh}
+.app{max-width:900px;margin:0 auto;padding:24px}
+.page{display:none}
+.page.active{display:block}
+.page-title{font-size:26px;font-weight:700;color:#1a1a2e;margin-bottom:20px}
+.subtitle{font-size:18px;font-weight:600;color:#1a1a2e;margin:16px 0 10px}
+.back-btn{background:#e94560;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:14px;font-family:inherit;cursor:pointer;margin-bottom:16px;transition:background .2s}
+.back-btn:hover{background:#c81e45}
+.card{background:#fff;border:1px solid #e0e0e0;border-radius:10px;padding:20px 22px;margin-bottom:8px;cursor:pointer;transition:all .15s}
+.card:hover{background:#eef2ff;border-color:#6366f1;transform:translateY(-1px);box-shadow:0 4px 12px rgba(99,102,241,.12)}
+.card-row{display:flex;justify-content:space-between;align-items:center}
+.card-name{font-size:18px;font-weight:600;color:#1a1a2e}
+.card-meta{display:flex;gap:16px;margin-top:5px}
+.card-type{font-size:13px;color:#6366f1;font-weight:600}
+.card-seats{font-size:13px;color:#666}
+.card-right{text-align:right}
+.card-count{font-size:13px;color:#888}
+.card-count b{color:#1a1a2e}
+.card-arrow{font-size:20px;color:#6366f1;margin-top:4px}
+.info-box{background:#fff;border:1px solid #e0e0e0;border-radius:10px;padding:20px 24px;margin-bottom:20px}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 32px}
+.info-label{font-size:13px;font-weight:600;color:#555}
+.info-value{font-size:14px;color:#1a1a2e}
+.info-row{display:flex;gap:8px;align-items:baseline}
+.session-card .card-name{font-size:16px}
+.session-card .card-meta{margin-top:4px}
+.session-time{font-size:13px;color:#1a1a2e}
+.session-dur{font-size:12px;color:#888;margin-top:2px}
+.detail-box{background:#fff;border:1px solid #e0e0e0;border-radius:12px;padding:28px 28px}
+.detail-row{display:flex;padding:12px 0;border-bottom:1px solid #f0f0f5}
+.detail-row:last-child{border-bottom:none}
+.detail-label{width:170px;font-size:14px;font-weight:600;color:#555;flex-shrink:0}
+.detail-value{font-size:14px;color:#1a1a2e}
+.fade-in{animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
+.badge{display:inline-block;background:#eef2ff;color:#6366f1;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="app">
+
+<div id="page-halls" class="page active">
+<div class="page-title">🎬 Кінозали</div>
+<div id="halls-list"></div>
+</div>
+
+<div id="page-hall-detail" class="page">
+<button class="back-btn" onclick="showPage('halls')">← Назад до списку</button>
+<div class="page-title" id="hall-title"></div>
+<div class="info-box">
+<div class="info-grid" id="hall-info"></div>
+</div>
+<div class="subtitle">Кіносеанси</div>
+<div id="sessions-list"></div>
+</div>
+
+<div id="page-session-detail" class="page">
+<button class="back-btn" id="session-back-btn">← Назад до кінозалу</button>
+<div class="page-title" id="session-title"></div>
+<div class="detail-box" id="session-info"></div>
+</div>
+
+</div>
+<script>
+const halls = [
+  {id:1,name:'Зал Преміум',seats:200,type:'IMAX',sessions:[
+    {id:1,title:'Дюна: Частина друга',genre:'SciFi',year:2024,start:'09:30',dur:166},
+    {id:2,title:'Опенгеймер',genre:'Drama',year:2023,start:'12:30',dur:180},
+    {id:3,title:'Інтерстеллар',genre:'SciFi',year:2014,start:'16:00',dur:169},
+    {id:4,title:'Аватар: Шлях води',genre:'Action',year:2022,start:'19:30',dur:192},
+    {id:5,title:'Темний лицар',genre:'Action',year:2008,start:'23:00',dur:152},
+    {id:6,title:'Початок',genre:'Thriller',year:2010,start:'10:00',dur:148},
+    {id:7,title:'Віднесені привидами',genre:'Animation',year:2001,start:'13:00',dur:125},
+    {id:8,title:'Матриця',genre:'SciFi',year:1999,start:'15:30',dur:136},
+    {id:9,title:'Форрест Гамп',genre:'Drama',year:1994,start:'18:00',dur:142},
+    {id:10,title:'Один вдома',genre:'Comedy',year:1990,start:'20:30',dur:103}
+  ]},
+  {id:2,name:'Зал Комфорт',seats:120,type:'ThreeD',sessions:[
+    {id:11,title:'Крижане серце',genre:'Animation',year:2013,start:'11:00',dur:102},
+    {id:12,title:'Шрек',genre:'Comedy',year:2001,start:'14:00',dur:90}
+  ]},
+  {id:3,name:'Малий зал',seats:60,type:'TwoD',sessions:[
+    {id:13,title:'Воно',genre:'Horror',year:2017,start:'21:00',dur:135},
+    {id:14,title:'Титанік',genre:'Romance',year:1997,start:'17:00',dur:195}
+  ]}
+];
+
+function endTime(start,dur){
+  const [h,m]=start.split(':').map(Number);
+  const total=h*60+m+dur;
+  return String(Math.floor(total/60)%24).padStart(2,'0')+':'+String(total%60).padStart(2,'0');
+}
+
+function totalDur(sessions){return sessions.reduce((s,x)=>s+x.dur,0);}
+
+function showPage(name,data){
+  document.querySelectorAll('.page').forEach(p=>{p.classList.remove('active');p.classList.remove('fade-in')});
+  setTimeout(()=>{
+    if(name==='halls'){
+      document.getElementById('page-halls').classList.add('active','fade-in');
+    } else if(name==='hall'){
+      renderHallDetail(data);
+      document.getElementById('page-hall-detail').classList.add('active','fade-in');
+    } else if(name==='session'){
+      renderSessionDetail(data.session,data.hallId);
+      document.getElementById('page-session-detail').classList.add('active','fade-in');
+    }
+    window.scrollTo(0,0);
+  },10);
+}
+
+function renderHallsList(){
+  const c=document.getElementById('halls-list');
+  c.innerHTML=halls.map(h=>`
+    <div class="card" onclick="showPage('hall',${h.id})">
+      <div class="card-row">
+        <div>
+          <div class="card-name">${h.name}</div>
+          <div class="card-meta">
+            <span class="card-type">${h.type}</span>
+            <span class="card-seats">${h.seats} місць</span>
+          </div>
+        </div>
+        <div class="card-right">
+          <div class="card-count">Сеансів: <b>${h.sessions.length}</b></div>
+          <div class="card-arrow">→</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderHallDetail(hallId){
+  const h=halls.find(x=>x.id===hallId);
+  document.getElementById('hall-title').textContent='🏛 '+h.name;
+  document.getElementById('hall-info').innerHTML=`
+    <div class="info-row"><span class="info-label">Тип залу:</span><span class="info-value">${h.type}</span></div>
+    <div class="info-row"><span class="info-label">Кількість місць:</span><span class="info-value">${h.seats}</span></div>
+    <div class="info-row"><span class="info-label">Кількість сеансів:</span><span class="info-value">${h.sessions.length}</span></div>
+    <div class="info-row"><span class="info-label">Загальна тривалість:</span><span class="info-value">${totalDur(h.sessions)} хв</span></div>
+  `;
+  document.getElementById('sessions-list').innerHTML=h.sessions.map(s=>`
+    <div class="card session-card" onclick="showPage('session',{session:${JSON.stringify(s)},hallId:${hallId}})">
+      <div class="card-row">
+        <div>
+          <div class="card-name">${s.title}</div>
+          <div class="card-meta">
+            <span class="card-type">${s.genre}</span>
+            <span class="card-seats">${s.year}</span>
+          </div>
+        </div>
+        <div class="card-right">
+          <div class="session-time">${s.start} — ${endTime(s.start,s.dur)}</div>
+          <div class="session-dur">${s.dur} хв</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderSessionDetail(s,hallId){
+  const h=halls.find(x=>x.id===hallId);
+  document.getElementById('session-back-btn').onclick=()=>showPage('hall',hallId);
+  document.getElementById('session-title').textContent='🎬 '+s.title;
+  document.getElementById('session-info').innerHTML=`
+    <div class="detail-row"><span class="detail-label">Кінозал:</span><span class="detail-value">${h.name}</span></div>
+    <div class="detail-row"><span class="detail-label">Жанр:</span><span class="detail-value">${s.genre}</span></div>
+    <div class="detail-row"><span class="detail-label">Рік випуску:</span><span class="detail-value">${s.year}</span></div>
+    <div class="detail-row"><span class="detail-label">Початок:</span><span class="detail-value">${s.start}</span></div>
+    <div class="detail-row"><span class="detail-label">Тривалість:</span><span class="detail-value">${s.dur} хв</span></div>
+    <div class="detail-row"><span class="detail-label">Завершення:</span><span class="detail-value">${endTime(s.start,s.dur)}</span></div>
+  `;
+}
+
+renderHallsList();
+</script>
+</body>
+</html>

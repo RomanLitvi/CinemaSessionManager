@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CinemaSessionManager.Repositories\CinemaSessionManager.Repositories.csproj" />
+    <ProjectReference Include="..\CinemaSessionManager.Models\CinemaSessionManager.Models.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,13 +2,13 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="CinemaSessionManager.MauiApp.Pages.SessionDetailsPage"
-             Title="Деталі сеансу"
+             Title="{Binding Session.MovieTitle}"
              BackgroundColor="{StaticResource BackgroundColor}">
     <ScrollView>
         <VerticalStackLayout Margin="16" Spacing="8">
 
             <!-- Назва фільму -->
-            <Label x:Name="MovieTitleLabel"
+            <Label Text="{Binding Session.MovieTitle, StringFormat='🎬 {0}'}"
                    FontSize="26"
                    FontAttributes="Bold"
                    TextColor="{StaticResource TextPrimaryColor}"
@@ -27,7 +27,8 @@
                         <Label Grid.Column="0" Text="Кінозал:"
                                FontAttributes="Bold" FontSize="14"
                                TextColor="{StaticResource TextSecondaryColor}" />
-                        <Label Grid.Column="1" x:Name="HallNameLabel"
+                        <Label Grid.Column="1"
+                               Text="{Binding Session.HallName}"
                                FontSize="14"
                                TextColor="{StaticResource TextPrimaryColor}" />
                     </Grid>
@@ -39,7 +40,8 @@
                         <Label Grid.Column="0" Text="Жанр:"
                                FontAttributes="Bold" FontSize="14"
                                TextColor="{StaticResource TextSecondaryColor}" />
-                        <Label Grid.Column="1" x:Name="GenreLabel"
+                        <Label Grid.Column="1"
+                               Text="{Binding Session.Genre}"
                                FontSize="14"
                                TextColor="{StaticResource TextPrimaryColor}" />
                     </Grid>
@@ -49,7 +51,8 @@
                         <Label Grid.Column="0" Text="Рік випуску:"
                                FontAttributes="Bold" FontSize="14"
                                TextColor="{StaticResource TextSecondaryColor}" />
-                        <Label Grid.Column="1" x:Name="ReleaseYearLabel"
+                        <Label Grid.Column="1"
+                               Text="{Binding Session.ReleaseYear}"
                                FontSize="14"
                                TextColor="{StaticResource TextPrimaryColor}" />
                     </Grid>
@@ -61,7 +64,8 @@
                         <Label Grid.Column="0" Text="Початок:"
                                FontAttributes="Bold" FontSize="14"
                                TextColor="{StaticResource TextSecondaryColor}" />
-                        <Label Grid.Column="1" x:Name="StartTimeLabel"
+                        <Label Grid.Column="1"
+                               Text="{Binding Session.StartTime, StringFormat='{0:HH:mm}'}"
                                FontSize="14"
                                TextColor="{StaticResource TextPrimaryColor}" />
                     </Grid>
@@ -71,7 +75,8 @@
                         <Label Grid.Column="0" Text="Тривалість:"
                                FontAttributes="Bold" FontSize="14"
                                TextColor="{StaticResource TextSecondaryColor}" />
-                        <Label Grid.Column="1" x:Name="DurationLabel"
+                        <Label Grid.Column="1"
+                               Text="{Binding Session.DurationMinutes, StringFormat='{0} хв'}"
                                FontSize="14"
                                TextColor="{StaticResource TextPrimaryColor}" />
                     </Grid>
@@ -81,7 +86,8 @@
                         <Label Grid.Column="0" Text="Завершення:"
                                FontAttributes="Bold" FontSize="14"
                                TextColor="{StaticResource TextSecondaryColor}" />
-                        <Label Grid.Column="1" x:Name="EndTimeLabel"
+                        <Label Grid.Column="1"
+                               Text="{Binding Session.EndTime, StringFormat='{0:HH:mm}'}"
                                FontSize="14"
                                TextColor="{StaticResource TextPrimaryColor}" />
                     </Grid>

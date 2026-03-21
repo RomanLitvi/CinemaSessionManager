@@ -1,25 +1,14 @@
-using CinemaSessionManager.MauiApp.Pages;
-
 namespace CinemaSessionManager.MauiApp
 {
     /// <summary>
-    /// Головний клас застосунку. Визначає початкову сторінку та навігаційну структуру.
-    /// partial — бо друга частина класу генерується автоматично з App.xaml (ресурси, стилі).
+    /// Головний клас застосунку. Отримує AppShell через DI і встановлює як головну сторінку.
     /// </summary>
     public partial class App : Application
     {
-        public App()
+        public App(IServiceProvider serviceProvider)
         {
-            // InitializeComponent() завантажує XAML-розмітку (App.xaml) і створює ресурси (кольори тощо)
             InitializeComponent();
-
-            // NavigationPage — контейнер навігації, який забезпечує стек сторінок і кнопку "Назад".
-            // CinemaHallsListPage — перша сторінка, яку бачить користувач.
-            MainPage = new NavigationPage(new CinemaHallsListPage())
-            {
-                BarBackgroundColor = Color.FromArgb("#6366f1"),
-                BarTextColor = Colors.White
-            };
+            MainPage = serviceProvider.GetRequiredService<AppShell>();
         }
     }
 }

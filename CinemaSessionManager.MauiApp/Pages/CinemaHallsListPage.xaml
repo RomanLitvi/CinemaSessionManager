@@ -4,9 +4,9 @@
              x:Class="CinemaSessionManager.MauiApp.Pages.CinemaHallsListPage"
              Title="Кінозали"
              BackgroundColor="{StaticResource BackgroundColor}">
-    <CollectionView x:Name="HallsCollectionView"
+    <CollectionView ItemsSource="{Binding Halls}"
                     SelectionMode="Single"
-                    SelectionChanged="HallsCollectionView_SelectionChanged"
+                    SelectedItem="{Binding SelectedHall, Mode=TwoWay}"
                     Margin="16">
         <CollectionView.Header>
             <Label Text="🎬 Кінозали"
@@ -54,7 +54,7 @@
                                 <Label.FormattedText>
                                     <FormattedString>
                                         <Span Text="Сеансів: " />
-                                        <Span Text="{Binding Sessions.Count}"
+                                        <Span Text="{Binding SessionCount}"
                                               FontAttributes="Bold"
                                               TextColor="{StaticResource TextPrimaryColor}" />
                                     </FormattedString>

@@ -11,7 +11,7 @@
     <Nullable>enable</Nullable>
 
     <ApplicationTitle>Менеджер кіносеансів</ApplicationTitle>
-    <ApplicationIdGuid>A6666666-6666-4000-A000-000000000006</ApplicationIdGuid>
+    <ApplicationIdGuid>A5555555-5555-4000-A000-000000000005</ApplicationIdGuid>
     <ApplicationId>com.cinema.sessionmanager</ApplicationId>
     <ApplicationVersion>1</ApplicationVersion>
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
@@ -26,8 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CinemaSessionManager.Models\CinemaSessionManager.Models.csproj" />
-    <ProjectReference Include="..\CinemaSessionManager.ViewModels\CinemaSessionManager.ViewModels.csproj" />
     <ProjectReference Include="..\CinemaSessionManager.Services\CinemaSessionManager.Services.csproj" />
   </ItemGroup>
 
