@@ -2,14 +2,22 @@ using CinemaSessionManager.Models.Entities;
 
 namespace CinemaSessionManager.Repositories.Storage
 {
-    /// <summary>
-    /// Інтерфейс внутрішнього сховища даних.
-    /// Доступний лише в межах проєкту Repositories.
-    /// </summary>
     public interface IDataStore
     {
-        List<CinemaHallEntity> GetCinemaHalls();
-        List<SessionEntity> GetSessionsByHallId(int hallId);
-        SessionEntity? GetSessionById(int sessionId);
+        Task<List<CinemaHallEntity>> GetAllCinemaHallsAsync();
+        Task<CinemaHallEntity?> GetCinemaHallByIdAsync(int id);
+        Task AddCinemaHallAsync(CinemaHallEntity hall);
+        Task UpdateCinemaHallAsync(CinemaHallEntity hall);
+        Task DeleteCinemaHallAsync(int id);
+
+        Task<List<SessionEntity>> GetSessionsByHallIdAsync(int hallId);
+        Task<SessionEntity?> GetSessionByIdAsync(int id);
+        Task AddSessionAsync(SessionEntity session);
+        Task UpdateSessionAsync(SessionEntity session);
+        Task DeleteSessionAsync(int id);
+        Task DeleteSessionsByHallIdAsync(int hallId);
+
+        Task<int> GenerateNextHallIdAsync();
+        Task<int> GenerateNextSessionIdAsync();
     }
 }

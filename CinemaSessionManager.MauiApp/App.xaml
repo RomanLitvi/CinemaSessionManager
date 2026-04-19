@@ -1,17 +1,45 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="CinemaSessionManager.MauiApp.App">
+             x:Class="CinemaSessionManager.MauiApp.App"
+             UserAppTheme="Light">
     <Application.Resources>
         <ResourceDictionary>
             <Color x:Key="PrimaryColor">#6366f1</Color>
-            <Color x:Key="PrimaryDarkColor">#4f46e5</Color>
             <Color x:Key="AccentColor">#e94560</Color>
             <Color x:Key="BackgroundColor">#f0f0f5</Color>
             <Color x:Key="CardColor">#ffffff</Color>
             <Color x:Key="TextPrimaryColor">#1a1a2e</Color>
             <Color x:Key="TextSecondaryColor">#666666</Color>
             <Color x:Key="BorderColor">#e0e0e0</Color>
+
+            <Style TargetType="Entry">
+                <Setter Property="BackgroundColor" Value="#ffffff" />
+                <Setter Property="TextColor" Value="#1a1a2e" />
+                <Setter Property="PlaceholderColor" Value="#999999" />
+            </Style>
+
+            <Style TargetType="Picker">
+                <Setter Property="BackgroundColor" Value="#ffffff" />
+                <Setter Property="TextColor" Value="#1a1a2e" />
+            </Style>
+
+            <Style TargetType="SearchBar">
+                <Setter Property="BackgroundColor" Value="#ffffff" />
+                <Setter Property="TextColor" Value="#1a1a2e" />
+                <Setter Property="PlaceholderColor" Value="#999999" />
+                <Setter Property="CancelButtonColor" Value="#6366f1" />
+            </Style>
+
+            <Style TargetType="TimePicker">
+                <Setter Property="BackgroundColor" Value="#ffffff" />
+                <Setter Property="TextColor" Value="#1a1a2e" />
+            </Style>
+
+            <Style TargetType="DatePicker">
+                <Setter Property="BackgroundColor" Value="#ffffff" />
+                <Setter Property="TextColor" Value="#1a1a2e" />
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

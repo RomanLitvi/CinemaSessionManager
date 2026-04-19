@@ -4,14 +4,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CinemaSessionManager.Repositories
 {
-    /// <summary>
-    /// Розширення для реєстрації репозиторіїв у IoC-контейнері.
-    /// </summary>
     public static class RepositoryCollectionExtensions
     {
-        public static IServiceCollection AddCinemaRepositories(this IServiceCollection services)
+        public static IServiceCollection AddCinemaRepositories(this IServiceCollection services, string dataDirectoryPath)
         {
-            services.AddSingleton<IDataStore, FakeDataStore>();
+            services.AddSingleton<IDataStore>(new JsonDataStore(dataDirectoryPath));
             services.AddTransient<ICinemaHallRepository, CinemaHallRepository>();
             services.AddTransient<ISessionRepository, SessionRepository>();
             return services;

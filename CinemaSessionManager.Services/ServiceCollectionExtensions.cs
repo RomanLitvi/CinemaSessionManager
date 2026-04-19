@@ -4,17 +4,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CinemaSessionManager.Services
 {
-    /// <summary>
-    /// Розширення для реєстрації сервісів і репозиторіїв у IoC-контейнері.
-    /// </summary>
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddCinemaServices(this IServiceCollection services)
+        public static IServiceCollection AddCinemaServices(this IServiceCollection services, string dataDirectoryPath)
         {
-            // Реєстрація рівня репозиторіїв
-            services.AddCinemaRepositories();
-
-            // Реєстрація сервісів
+            services.AddCinemaRepositories(dataDirectoryPath);
             services.AddTransient<ICinemaHallService, CinemaHallService>();
             services.AddTransient<ISessionService, SessionService>();
             return services;

@@ -4,9 +4,6 @@ using CinemaSessionManager.Repositories.Storage;
 
 namespace CinemaSessionManager.Repositories
 {
-    /// <summary>
-    /// Репозиторій для отримання даних про кіносеанси зі сховища.
-    /// </summary>
     public class SessionRepository : ISessionRepository
     {
         private readonly IDataStore _dataStore;
@@ -16,14 +13,25 @@ namespace CinemaSessionManager.Repositories
             _dataStore = dataStore;
         }
 
-        public List<SessionEntity> GetByHallId(int hallId)
-        {
-            return _dataStore.GetSessionsByHallId(hallId);
-        }
+        public Task<List<SessionEntity>> GetByHallIdAsync(int hallId)
+            => _dataStore.GetSessionsByHallIdAsync(hallId);
 
-        public SessionEntity? GetById(int id)
-        {
-            return _dataStore.GetSessionById(id);
-        }
+        public Task<SessionEntity?> GetByIdAsync(int id)
+            => _dataStore.GetSessionByIdAsync(id);
+
+        public Task AddAsync(SessionEntity session)
+            => _dataStore.AddSessionAsync(session);
+
+        public Task UpdateAsync(SessionEntity session)
+            => _dataStore.UpdateSessionAsync(session);
+
+        public Task DeleteAsync(int id)
+            => _dataStore.DeleteSessionAsync(id);
+
+        public Task DeleteByHallIdAsync(int hallId)
+            => _dataStore.DeleteSessionsByHallIdAsync(hallId);
+
+        public Task<int> GenerateNextIdAsync()
+            => _dataStore.GenerateNextSessionIdAsync();
     }
 }

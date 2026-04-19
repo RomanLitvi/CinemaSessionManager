@@ -8,6 +8,7 @@ namespace CinemaSessionManager.MauiApp
         public App(IServiceProvider serviceProvider)
         {
             InitializeComponent();
+            UserAppTheme = AppTheme.Light;
             MainPage = serviceProvider.GetRequiredService<AppShell>();
         }
     }

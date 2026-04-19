@@ -2,15 +2,21 @@ using CinemaSessionManager.MauiApp.ViewModels;
 
 namespace CinemaSessionManager.MauiApp.Pages
 {
-    /// <summary>
-    /// Сторінка списку кінозалів. Вся логіка знаходиться у CinemaHallsListViewModel.
-    /// </summary>
     public partial class CinemaHallsListPage : ContentPage
     {
+        private readonly CinemaHallsListViewModel _viewModel;
+
         public CinemaHallsListPage(CinemaHallsListViewModel viewModel)
         {
             InitializeComponent();
+            _viewModel = viewModel;
             BindingContext = viewModel;
+        }
+
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+            await _viewModel.LoadHallsAsync();
         }
     }
 }

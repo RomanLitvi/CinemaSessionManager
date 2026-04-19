@@ -1,13 +1,11 @@
+using CinemaSessionManager.Models.Entities;
+using CinemaSessionManager.Models.Enums;
 using CinemaSessionManager.Repositories.Interfaces;
 using CinemaSessionManager.Services.Dtos;
 using CinemaSessionManager.Services.Interfaces;
 
 namespace CinemaSessionManager.Services
 {
-    /// <summary>
-    /// Сервіс для роботи з кінозалами.
-    /// Отримує дані з репозиторіїв, конвертує Entity → DTO і повертає для використання у UI.
-    /// </summary>
     public class CinemaHallService : ICinemaHallService
     {
         private readonly ICinemaHallRepository _hallRepository;
@@ -19,22 +17,19 @@ namespace CinemaSessionManager.Services
             _sessionRepository = sessionRepository;
         }
 
-        /// <summary>
-        /// Повертає список усіх кінозалів з кількістю сеансів для відображення у списку.
-        /// </summary>
-        public List<CinemaHallListDto> GetAllHalls()
+        public async Task<List<CinemaHallListDto>> GetAllHallsAsync()
         {
-            var halls = _hallRepository.GetAll();
+            var halls = await _hallRepository.GetAllAsync();
             var result = new List<CinemaHallListDto>();
 
             foreach (var hall in halls)
             {
-                var sessions = _sessionRepository.GetByHallId(hall.Id);
+                var sessions = await _sessionRepository.GetByHallIdAsync(hall.Id);
                 result.Add(new CinemaHallListDto
                 {
                     Id = hall.Id,
                     Name = hall.Name,
-                    HallType = hall.HallType.ToString(),
+                    HallType = hall.HallType,
                     SeatsCount = hall.SeatsCount,
                     SessionCount = sessions.Count
                 });
@@ -43,39 +38,59 @@ namespace CinemaSessionManager.Services
             return result;
         }
 
-        /// <summary>
-        /// Повертає детальну інформацію про кінозал разом зі списком сеансів.
-        /// </summary>
-        public CinemaHallDetailDto? GetHallDetails(int hallId)
+        public async Task<CinemaHallDetailDto?> GetHallDetailsAsync(int hallId)
         {
-            var hall = _hallRepository.GetById(hallId);
+            var hall = await _hallRepository.GetByIdAsync(hallId);
             if (hall == null)
                 return null;
 
-            var sessions = _sessionRepository.GetByHallId(hallId);
-            var sessionDtos = new List<SessionListDto>();
-
-            foreach (var session in sessions)
+            var sessions = await _sessionRepository.GetByHallIdAsync(hallId);
+            var sessionDtos = sessions.Select(s => new SessionListDto
             {
-                sessionDtos.Add(new SessionListDto
-                {
-                    Id = session.Id,
-                    MovieTitle = session.MovieTitle,
-                    Genre = session.Genre.ToString(),
-                    ReleaseYear = session.ReleaseYear,
-                    StartTime = session.StartTime,
-                    DurationMinutes = session.DurationMinutes
-                });
-            }
+                Id = s.Id,
+                MovieTitle = s.MovieTitle,
+                Genre = s.Genre,
+                ReleaseYear = s.ReleaseYear,
+                StartTime = s.StartTime,
+                DurationMinutes = s.DurationMinutes
+            }).ToList();
 
             return new CinemaHallDetailDto
             {
                 Id = hall.Id,
                 Name = hall.Name,
-                HallType = hall.HallType.ToString(),
+                HallType = hall.HallType,
                 SeatsCount = hall.SeatsCount,
                 Sessions = sessionDtos
             };
+        }
+
+        public async Task<CinemaHallDetailDto> CreateHallAsync(string name, int seatsCount, CinemaHallType hallType)
+        {
+            int newId = await _hallRepository.GenerateNextIdAsync();
+            var entity = new CinemaHallEntity(newId, name, seatsCount, hallType);
+            await _hallRepository.AddAsync(entity);
+
+            return new CinemaHallDetailDto
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                HallType = entity.HallType,
+                SeatsCount = entity.SeatsCount,
+                Sessions = new List<SessionListDto>()
+            };
+        }
+
+        public async Task UpdateHallAsync(int id, string name, int seatsCount, CinemaHallType hallType)
+        {
+            var entity = new CinemaHallEntity(id, name, seatsCount, hallType);
+            await _hallRepository.UpdateAsync(entity);
+        }
+
+        public async Task DeleteHallAsync(int id)
+        {
+            await _sessionRepository.DeleteByHallIdAsync(id);
+            await _hallRepository.DeleteAsync(id);
         }
     }
 }

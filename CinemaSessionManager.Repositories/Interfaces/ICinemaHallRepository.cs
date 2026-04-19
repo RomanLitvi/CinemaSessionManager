@@ -2,12 +2,13 @@ using CinemaSessionManager.Models.Entities;
 
 namespace CinemaSessionManager.Repositories.Interfaces
 {
-    /// <summary>
-    /// Інтерфейс репозиторію для роботи з кінозалами.
-    /// </summary>
     public interface ICinemaHallRepository
     {
-        List<CinemaHallEntity> GetAll();
-        CinemaHallEntity? GetById(int id);
+        Task<List<CinemaHallEntity>> GetAllAsync();
+        Task<CinemaHallEntity?> GetByIdAsync(int id);
+        Task AddAsync(CinemaHallEntity hall);
+        Task UpdateAsync(CinemaHallEntity hall);
+        Task DeleteAsync(int id);
+        Task<int> GenerateNextIdAsync();
     }
 }

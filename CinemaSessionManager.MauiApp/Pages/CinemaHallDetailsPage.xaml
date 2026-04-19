@@ -4,138 +4,253 @@
              x:Class="CinemaSessionManager.MauiApp.Pages.CinemaHallDetailsPage"
              Title="{Binding Hall.Name}"
              BackgroundColor="{StaticResource BackgroundColor}">
-    <ScrollView>
-        <VerticalStackLayout Margin="16" Spacing="12">
 
-            <!-- Назва залу -->
-            <Label Text="{Binding Hall.Name, StringFormat='🏛 {0}'}"
-                   FontSize="26"
-                   FontAttributes="Bold"
-                   TextColor="{StaticResource TextPrimaryColor}"
-                   Margin="4,8,4,4" />
+    <Grid RowDefinitions="*">
 
-            <!-- Деталі залу -->
-            <Border BackgroundColor="{StaticResource CardColor}"
-                    StrokeShape="RoundRectangle 10"
-                    Stroke="{StaticResource BorderColor}"
-                    StrokeThickness="1"
-                    Padding="20,16">
-                <Grid ColumnDefinitions="Auto, *, Auto, *"
-                      RowDefinitions="Auto, Auto"
-                      ColumnSpacing="8"
-                      RowSpacing="10">
+        <ScrollView IsEnabled="{Binding IsNotBusy}">
+            <VerticalStackLayout Margin="16" Spacing="12">
 
-                    <Label Grid.Row="0" Grid.Column="0"
-                           Text="Тип залу:"
-                           FontAttributes="Bold"
-                           FontSize="13"
-                           TextColor="{StaticResource TextSecondaryColor}" />
-                    <Label Grid.Row="0" Grid.Column="1"
-                           Text="{Binding Hall.HallType}"
-                           FontSize="14"
-                           TextColor="{StaticResource TextPrimaryColor}" />
+                <!-- Кнопки керування залом -->
+                <HorizontalStackLayout Spacing="10" HorizontalOptions="End">
+                    <Button Text="Редагувати"
+                            Command="{Binding EditCommand}"
+                            BackgroundColor="{StaticResource PrimaryColor}"
+                            TextColor="White"
+                            FontSize="14"
+                            HeightRequest="36"
+                            CornerRadius="8"
+                            IsVisible="{Binding IsNotEditing}" />
+                    <Button Text="Видалити зал"
+                            Command="{Binding DeleteHallCommand}"
+                            BackgroundColor="{StaticResource AccentColor}"
+                            TextColor="White"
+                            FontSize="14"
+                            HeightRequest="36"
+                            CornerRadius="8"
+                            IsVisible="{Binding IsNotEditing}" />
+                </HorizontalStackLayout>
 
-                    <Label Grid.Row="0" Grid.Column="2"
-                           Text="Місць:"
-                           FontAttributes="Bold"
-                           FontSize="13"
-                           TextColor="{StaticResource TextSecondaryColor}"
-                           Margin="16,0,0,0" />
-                    <Label Grid.Row="0" Grid.Column="3"
-                           Text="{Binding Hall.SeatsCount}"
-                           FontSize="14"
-                           TextColor="{StaticResource TextPrimaryColor}" />
+                <!-- Режим перегляду інформації про зал -->
+                <Border BackgroundColor="{StaticResource CardColor}"
+                        StrokeShape="RoundRectangle 10"
+                        Stroke="{StaticResource BorderColor}"
+                        StrokeThickness="1"
+                        Padding="20,16"
+                        IsVisible="{Binding IsNotEditing}">
+                    <Grid ColumnDefinitions="Auto, *, Auto, *"
+                          RowDefinitions="Auto, Auto"
+                          ColumnSpacing="8"
+                          RowSpacing="10">
+                        <Label Grid.Row="0" Grid.Column="0"
+                               Text="Тип залу:"
+                               FontAttributes="Bold" FontSize="13"
+                               TextColor="{StaticResource TextSecondaryColor}" />
+                        <Label Grid.Row="0" Grid.Column="1"
+                               Text="{Binding Hall.HallType}"
+                               FontSize="14"
+                               TextColor="{StaticResource TextPrimaryColor}" />
+                        <Label Grid.Row="0" Grid.Column="2"
+                               Text="Місць:"
+                               FontAttributes="Bold" FontSize="13"
+                               TextColor="{StaticResource TextSecondaryColor}"
+                               Margin="16,0,0,0" />
+                        <Label Grid.Row="0" Grid.Column="3"
+                               Text="{Binding Hall.SeatsCount}"
+                               FontSize="14"
+                               TextColor="{StaticResource TextPrimaryColor}" />
+                        <Label Grid.Row="1" Grid.Column="0"
+                               Text="Сеансів:"
+                               FontAttributes="Bold" FontSize="13"
+                               TextColor="{StaticResource TextSecondaryColor}" />
+                        <Label Grid.Row="1" Grid.Column="1"
+                               Text="{Binding Hall.SessionCount}"
+                               FontSize="14"
+                               TextColor="{StaticResource TextPrimaryColor}" />
+                        <Label Grid.Row="1" Grid.Column="2"
+                               Text="Тривалість:"
+                               FontAttributes="Bold" FontSize="13"
+                               TextColor="{StaticResource TextSecondaryColor}"
+                               Margin="16,0,0,0" />
+                        <Label Grid.Row="1" Grid.Column="3"
+                               Text="{Binding Hall.TotalSessionsDurationMinutes, StringFormat='{0} хв'}"
+                               FontSize="14"
+                               TextColor="{StaticResource TextPrimaryColor}" />
+                    </Grid>
+                </Border>
 
-                    <Label Grid.Row="1" Grid.Column="0"
-                           Text="Сеансів:"
-                           FontAttributes="Bold"
-                           FontSize="13"
-                           TextColor="{StaticResource TextSecondaryColor}" />
-                    <Label Grid.Row="1" Grid.Column="1"
-                           Text="{Binding Hall.SessionCount}"
-                           FontSize="14"
-                           TextColor="{StaticResource TextPrimaryColor}" />
+                <!-- Режим редагування інформації про зал -->
+                <Border BackgroundColor="{StaticResource CardColor}"
+                        StrokeShape="RoundRectangle 10"
+                        Stroke="{StaticResource PrimaryColor}"
+                        StrokeThickness="2"
+                        Padding="20,16"
+                        IsVisible="{Binding IsEditing}">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Редагування залу" FontSize="16" FontAttributes="Bold"
+                               TextColor="{StaticResource PrimaryColor}" />
 
-                    <Label Grid.Row="1" Grid.Column="2"
-                           Text="Тривалість:"
-                           FontAttributes="Bold"
-                           FontSize="13"
-                           TextColor="{StaticResource TextSecondaryColor}"
-                           Margin="16,0,0,0" />
-                    <Label Grid.Row="1" Grid.Column="3"
-                           Text="{Binding Hall.TotalSessionsDurationMinutes, StringFormat='{0} хв'}"
-                           FontSize="14"
-                           TextColor="{StaticResource TextPrimaryColor}" />
+                        <Label Text="Назва:" FontSize="13"
+                               TextColor="{StaticResource TextSecondaryColor}" />
+                        <Entry Text="{Binding EditName}"
+                               Placeholder="Назва залу" />
+
+                        <Label Text="Тип залу:" FontSize="13"
+                               TextColor="{StaticResource TextSecondaryColor}" />
+                        <Picker ItemsSource="{Binding HallTypeOptions}"
+                                SelectedIndex="{Binding EditHallTypeIndex}" />
+
+                        <Label Text="Кількість місць:" FontSize="13"
+                               TextColor="{StaticResource TextSecondaryColor}" />
+                        <Entry Text="{Binding EditSeatsText}"
+                               Placeholder="Кількість місць"
+                               Keyboard="Numeric" />
+
+                        <HorizontalStackLayout Spacing="10" HorizontalOptions="End">
+                            <Button Text="Зберегти"
+                                    Command="{Binding SaveCommand}"
+                                    BackgroundColor="{StaticResource PrimaryColor}"
+                                    TextColor="White"
+                                    CornerRadius="8" />
+                            <Button Text="Скасувати"
+                                    Command="{Binding CancelEditCommand}"
+                                    BackgroundColor="#888"
+                                    TextColor="White"
+                                    CornerRadius="8" />
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Заголовок сеансів та пошук -->
+                <Label Text="Кіносеанси"
+                       FontSize="18" FontAttributes="Bold"
+                       TextColor="{StaticResource TextPrimaryColor}"
+                       Margin="4,8,4,0" />
+
+                <SearchBar Placeholder="Пошук за назвою або жанром..."
+                           Text="{Binding SessionSearchQuery}"
+                           BackgroundColor="{StaticResource CardColor}" />
+
+                <Grid ColumnDefinitions="*, Auto, Auto" ColumnSpacing="8">
+                    <Picker Grid.Column="0"
+                            ItemsSource="{Binding SessionSortOptions}"
+                            SelectedIndex="{Binding SessionSortIndex}"
+                            Title="Сортування"
+                            BackgroundColor="{StaticResource CardColor}" />
+                    <Button Grid.Column="1"
+                            Text="&#x21C5;"
+                            Command="{Binding ToggleSessionSortCommand}"
+                            IsEnabled="{Binding IsNotBusy}"
+                            BackgroundColor="{StaticResource PrimaryColor}"
+                            TextColor="White"
+                            FontSize="16"
+                            WidthRequest="36"
+                            HeightRequest="36"
+                            CornerRadius="18"
+                            Padding="0" />
+                    <Button Grid.Column="2"
+                            Text="+"
+                            Command="{Binding AddSessionCommand}"
+                            IsEnabled="{Binding IsNotBusy}"
+                            BackgroundColor="{StaticResource AccentColor}"
+                            TextColor="White"
+                            FontSize="20"
+                            FontAttributes="Bold"
+                            WidthRequest="44"
+                            HeightRequest="44"
+                            CornerRadius="22"
+                            Padding="0" />
                 </Grid>
-            </Border>
 
-            <!-- Заголовок списку сеансів -->
-            <Label Text="Кіносеанси"
-                   FontSize="18"
-                   FontAttributes="Bold"
-                   TextColor="{StaticResource TextPrimaryColor}"
-                   Margin="4,8,4,0" />
+                <!-- Список сеансів -->
+                <CollectionView ItemsSource="{Binding Sessions}"
+                                SelectionMode="Single"
+                                SelectedItem="{Binding SelectedSession, Mode=TwoWay}">
+                    <CollectionView.EmptyView>
+                        <Label Text="Немає сеансів"
+                               HorizontalTextAlignment="Center"
+                               TextColor="{StaticResource TextSecondaryColor}"
+                               FontSize="14"
+                               Margin="0,20" />
+                    </CollectionView.EmptyView>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <SwipeView>
+                                <SwipeView.RightItems>
+                                    <SwipeItems>
+                                        <SwipeItem Text="Видалити"
+                                                   BackgroundColor="#e94560"
+                                                   Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteSessionCommand}"
+                                                   CommandParameter="{Binding Id}" />
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+                                <Border BackgroundColor="{StaticResource CardColor}"
+                                        StrokeShape="RoundRectangle 10"
+                                        Stroke="{StaticResource BorderColor}"
+                                        StrokeThickness="1"
+                                        Padding="20,12"
+                                        Margin="0,4">
+                                    <Grid ColumnDefinitions="*, Auto">
+                                        <VerticalStackLayout Grid.Column="0">
+                                            <Label Text="{Binding MovieTitle}"
+                                                   FontSize="16"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{StaticResource TextPrimaryColor}" />
+                                            <HorizontalStackLayout Spacing="12" Margin="0,4,0,0">
+                                                <Label Text="{Binding Genre}"
+                                                       FontSize="12"
+                                                       TextColor="{StaticResource PrimaryColor}"
+                                                       FontAttributes="Bold" />
+                                                <Label Text="{Binding ReleaseYear}"
+                                                       FontSize="12"
+                                                       TextColor="{StaticResource TextSecondaryColor}" />
+                                            </HorizontalStackLayout>
+                                        </VerticalStackLayout>
+                                        <VerticalStackLayout Grid.Column="1"
+                                                             VerticalOptions="Center"
+                                                             HorizontalOptions="End">
+                                            <Label FontSize="13"
+                                                   TextColor="{StaticResource TextPrimaryColor}"
+                                                   HorizontalTextAlignment="End">
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span Text="{Binding StartTime, StringFormat='{0:HH:mm}'}" />
+                                                        <Span Text=" — " />
+                                                        <Span Text="{Binding EndTime, StringFormat='{0:HH:mm}'}" />
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                            <Label FontSize="12"
+                                                   TextColor="#888"
+                                                   HorizontalTextAlignment="End"
+                                                   Margin="0,2,0,0">
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span Text="{Binding DurationMinutes}" />
+                                                        <Span Text=" хв" />
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </Border>
+                            </SwipeView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
 
-            <!-- Список сеансів -->
-            <CollectionView ItemsSource="{Binding Hall.Sessions}"
-                            SelectionMode="Single"
-                            SelectedItem="{Binding SelectedSession, Mode=TwoWay}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Border BackgroundColor="{StaticResource CardColor}"
-                                StrokeShape="RoundRectangle 10"
-                                Stroke="{StaticResource BorderColor}"
-                                StrokeThickness="1"
-                                Padding="20,12"
-                                Margin="0,4">
-                            <Grid ColumnDefinitions="*, Auto">
-                                <VerticalStackLayout Grid.Column="0">
-                                    <Label Text="{Binding MovieTitle}"
-                                           FontSize="16"
-                                           FontAttributes="Bold"
-                                           TextColor="{StaticResource TextPrimaryColor}" />
-                                    <HorizontalStackLayout Spacing="12" Margin="0,4,0,0">
-                                        <Label Text="{Binding Genre}"
-                                               FontSize="12"
-                                               TextColor="{StaticResource PrimaryColor}"
-                                               FontAttributes="Bold" />
-                                        <Label Text="{Binding ReleaseYear}"
-                                               FontSize="12"
-                                               TextColor="{StaticResource TextSecondaryColor}" />
-                                    </HorizontalStackLayout>
-                                </VerticalStackLayout>
-                                <VerticalStackLayout Grid.Column="1"
-                                                     VerticalOptions="Center"
-                                                     HorizontalOptions="End">
-                                    <Label FontSize="13"
-                                           TextColor="{StaticResource TextPrimaryColor}"
-                                           HorizontalTextAlignment="End">
-                                        <Label.FormattedText>
-                                            <FormattedString>
-                                                <Span Text="{Binding StartTime, StringFormat='{0:HH:mm}'}" />
-                                                <Span Text=" — " />
-                                                <Span Text="{Binding EndTime, StringFormat='{0:HH:mm}'}" />
-                                            </FormattedString>
-                                        </Label.FormattedText>
-                                    </Label>
-                                    <Label FontSize="12"
-                                           TextColor="#888"
-                                           HorizontalTextAlignment="End"
-                                           Margin="0,2,0,0">
-                                        <Label.FormattedText>
-                                            <FormattedString>
-                                                <Span Text="{Binding DurationMinutes}" />
-                                                <Span Text=" хв" />
-                                            </FormattedString>
-                                        </Label.FormattedText>
-                                    </Label>
-                                </VerticalStackLayout>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+            </VerticalStackLayout>
+        </ScrollView>
 
-        </VerticalStackLayout>
-    </ScrollView>
+        <!-- Overlay індикатор завантаження -->
+        <Grid IsVisible="{Binding IsBusy}"
+              BackgroundColor="#44000000">
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               Color="{StaticResource PrimaryColor}"
+                               HeightRequest="50"
+                               WidthRequest="50"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+        </Grid>
+
+    </Grid>
 </ContentPage>

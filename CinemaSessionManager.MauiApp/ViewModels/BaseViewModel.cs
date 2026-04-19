@@ -3,26 +3,28 @@ using System.Runtime.CompilerServices;
 
 namespace CinemaSessionManager.MauiApp.ViewModels
 {
-    /// <summary>
-    /// Базовий клас для всіх ViewModel. Реалізує INotifyPropertyChanged
-    /// для підтримки прив'язки даних у MVVM-патерні.
-    /// </summary>
     public abstract class BaseViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        /// <summary>
-        /// Сповіщає UI про зміну властивості.
-        /// </summary>
+        private bool _isBusy;
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set
+            {
+                if (SetField(ref _isBusy, value))
+                    OnPropertyChanged(nameof(IsNotBusy));
+            }
+        }
+
+        public bool IsNotBusy => !IsBusy;
+
         protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        /// <summary>
-        /// Встановлює значення поля і сповіщає UI лише якщо значення змінилось.
-        /// Повертає true, якщо значення змінилось.
-        /// </summary>
         protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
         {
             if (EqualityComparer<T>.Default.Equals(field, value))
@@ -31,6 +33,22 @@ namespace CinemaSessionManager.MauiApp.ViewModels
             field = value;
             OnPropertyChanged(propertyName);
             return true;
+        }
+
+        protected async Task RunBusyAsync(Func<Task> action)
+        {
+            if (IsBusy)
+                return;
+
+            IsBusy = true;
+            try
+            {
+                await action();
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
     }
 }
