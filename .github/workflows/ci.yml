@@ -8,20 +8,20 @@ on:
 
 jobs:
   build:
-    name: Build & Verify (.NET)
+    name: Build & Verify (.NET 8)
     runs-on: macos-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup .NET SDK
+      - name: Setup .NET 8 SDK
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
 
       - name: Install MAUI workload
-        run: dotnet workload install maui
+        run: dotnet workload install maui-maccatalyst
 
       - name: Restore dependencies
         run: dotnet restore CinemaSessionManager.sln
