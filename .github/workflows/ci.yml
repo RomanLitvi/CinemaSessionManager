@@ -24,7 +24,7 @@ jobs:
         run: dotnet workload install maui-maccatalyst
 
       - name: Restore dependencies
-        run: dotnet restore CinemaSessionManager.sln
+        run: dotnet restore CinemaSessionManager.sln -r maccatalyst-x64
 
       - name: Build (Release)
-        run: dotnet build CinemaSessionManager.sln -c Release --no-restore
+        run: dotnet build CinemaSessionManager.sln -c Release --no-restore -r maccatalyst-x64
